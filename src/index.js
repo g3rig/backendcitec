@@ -1,8 +1,11 @@
 import express from 'express';
 import mul1Routes from './routes/mul_1.routes.js'
 import mul2Routes from './routes/mul_2.routes.js'
+import cors from 'cors';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
