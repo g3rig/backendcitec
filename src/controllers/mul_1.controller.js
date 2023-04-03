@@ -15,10 +15,10 @@ export const getLastDataM1 = async (req, res) => {
   }
 };
 
-//Temperatura Auditorio
 export const getBetweenDateM1 = async (req, res) => {
   let fecha_inicio = req.query.fecha_inicio;
   let fecha_fin = req.query.fecha_fin;
+  let sensor = req.query.sensor
 
   if (!fecha_inicio || !fecha_fin) {
     return res.status(400).json({ message: "Faltan parámetros de fecha" });
@@ -30,7 +30,7 @@ export const getBetweenDateM1 = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "SELECT p1tp1, fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? ORDER BY fecha_m1 ASC, hora_m1 ASC",
+      `SELECT ${sensor}, fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? ORDER BY fecha_m1 ASC, hora_m1 ASC`,
       [fecha_inicio, fecha_fin]
     );
     if (result.length === 0) {
@@ -45,11 +45,10 @@ export const getBetweenDateM1 = async (req, res) => {
   }
 };
 
-
-// Temperatura Máxima del Auditorio
 export const getMaxBetweenDateM1 = async (req, res) => {
   let fecha_inicio = req.query.fecha_inicio;
   let fecha_fin = req.query.fecha_fin;
+  let sensor = req.query.sensor;
 
   if (!fecha_inicio || !fecha_fin) {
     return res.status(400).json({ message: "Faltan parámetros de fecha" });
@@ -61,7 +60,7 @@ export const getMaxBetweenDateM1 = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT MAX(p1tp1) AS max_value , fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1",
+      `SELECT MAX(${sensor}) AS max_value , fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1`,
       [fecha_inicio, fecha_fin]
     );
     res.send(result);
@@ -73,10 +72,10 @@ export const getMaxBetweenDateM1 = async (req, res) => {
   }
 };
 
-// Temperatura Mínima del Auditorio
 export const getMinBetweenDateM1 = async (req, res) => {
   let fecha_inicio = req.query.fecha_inicio;
   let fecha_fin = req.query.fecha_fin;
+  let sensor = req.query.sensor;
 
   if (!fecha_inicio || !fecha_fin) {
     return res.status(400).json({ message: "Faltan parámetros de fecha" });
@@ -88,7 +87,7 @@ export const getMinBetweenDateM1 = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT MIN(p1tp1) AS min_value , fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1",
+      `SELECT MIN(${sensor}) AS min_value , fecha_m1, hora_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1`,
       [fecha_inicio, fecha_fin]
     );
     res.send(result);
@@ -100,10 +99,10 @@ export const getMinBetweenDateM1 = async (req, res) => {
   }
 };
 
-// Temperatura Promedio del Auditorio
 export const getAvgBetweenDateM1 = async (req, res) => {
   let fecha_inicio = req.query.fecha_inicio;
   let fecha_fin = req.query.fecha_fin;
+  let sensor = req.query.sensor;
 
   if (!fecha_inicio || !fecha_fin) {
     return res.status(400).json({ message: "Faltan parámetros de fecha" });
@@ -115,7 +114,7 @@ export const getAvgBetweenDateM1 = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "SELECT AVG(p1tp1) AS avg_value , fecha_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1",
+      `SELECT AVG(${sensor}) AS avg_value , fecha_m1 FROM mul_1 WHERE fecha_m1 BETWEEN ? AND ? GROUP BY fecha_m1`,
       [fecha_inicio, fecha_fin]
     );
     res.send(result);
