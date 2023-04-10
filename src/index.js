@@ -1,5 +1,5 @@
 import express from 'express';
-import mul1Routes from './routes/mul_1.routes.js'
+import mul1Routes from './routes/mul.routes.js'
 import mul2Routes from './routes/mul_2.routes.js'
 import cors from 'cors';
 
