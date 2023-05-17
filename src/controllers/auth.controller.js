@@ -32,7 +32,7 @@ export const signUp = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    const result = await pool.query(
+    await pool.query(
       "INSERT INTO usuarios (nombre, apellido, email, password, rol) VALUES (?,?,?,?,?)",
       [nombre, apellido, email, hashedPassword, rol]
     );
@@ -113,7 +113,6 @@ const generateToken = (userId, userRole) => {
 
   // Generar token utilizando la clave secreta
   const token = jwt.sign(payload, process.env.JWT_SECRET, options);
-  console.log("Token: ", token);
 
   return token;
 };

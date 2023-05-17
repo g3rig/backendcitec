@@ -4,7 +4,7 @@ import { pool } from "../db/database.js";
 export const getUsers = async (req, res) => {
   try {
     const [result] = await pool.query("SELECT * FROM usuarios");
-    res.send(result[0]);
+    res.send(result);
   } catch (error) {
     console.log(error);
     res.send(500).json({
@@ -52,7 +52,7 @@ export const updateUserById = async (req, res) => {
     }
 
     // Actualizar los campos del usuario en la base de datos
-    const result = await pool.query(
+    await pool.query(
       "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, rol = ?, status = ? WHERE id = ?",
       [nombre, apellido, email, rol, status, id]
     );
@@ -77,7 +77,7 @@ export const deleteUserById = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    const result = await pool.query("DELETE FROM usuarios WHERE id = ?", [id]);
+    await pool.query("DELETE FROM usuarios WHERE id = ?", [id]);
     return res.status(204).json({ message: "Usuario eliminado con éxito" });
   } catch (error) {
     console.error("Error al eliminar el usuario: ", error);
