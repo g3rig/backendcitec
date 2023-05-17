@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS mul_monitor;
+CREATE DATABASE IF NOT EXISTS ditec_bd;
 
 USE mul_monitor;
 

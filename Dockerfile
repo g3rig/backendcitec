@@ -14,6 +14,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
+#--only=production
 RUN npm install
 
 # Copiar el resto de los archivos del proyecto
@@ -26,4 +27,4 @@ RUN apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
 EXPOSE 4000
 
 # Comando para iniciar el servidor
-CMD [ "node", "src/index.js" ]
+CMD [ "npx", "nodemon", "src/index.js" ]

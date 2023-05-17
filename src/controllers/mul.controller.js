@@ -1,5 +1,4 @@
-import { pool } from "../db/conn.js";
-import { format, parse } from "date-fns";
+import { pool } from "../db/database.js";
 
 export const getLastData = async (req, res) => {
   let mul = req.query.mul;
@@ -60,111 +59,6 @@ export const getBetweenDate = async (req, res) => {
   try {
     const [result] = await pool.query(
       `SELECT ${sensor}, ${fecha}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? ORDER BY ${fecha} ASC, ${hora} ASC`,
-      [fecha_inicio, fecha_fin]
-    );
-    if (result.length === 0) {
-      return res.status(404).json({
-        message: "No se encontraron datos para las fechas especificadas",
-      });
-    }
-    res.json(result);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Something goes wrong",
-    });
-  }
-};
-
-export const getMaxBetweenDate = async (req, res) => {
-  let fecha_inicio = req.query.fecha_inicio;
-  let fecha_fin = req.query.fecha_fin;
-  let sensor = req.query.sensor;
-  let mul = req.query.mul;
-  let fecha = mul == "mul_1" ? "fecha_m1" : "fecha_m2";
-  let hora = mul == "mul_1" ? "hora_m1" : "hora_m2";
-
-  if (!fecha_inicio || !fecha_fin) {
-    return res.status(400).json({ message: "Faltan parámetros de fecha" });
-  }
-
-  if (!isValidDate(fecha_inicio) || !isValidDate(fecha_fin)) {
-    return res.status(400).json({ message: "Fechas no válidas" });
-  }
-
-  try {
-    const [result] = await pool.query(
-      `SELECT MAX(${sensor}) AS max_value, ${fecha}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? GROUP BY ${fecha}, ${hora}`,
-      [fecha_inicio, fecha_fin]
-    );
-    if (result.length === 0) {
-      return res.status(404).json({
-        message: "No se encontraron datos para las fechas especificadas",
-      });
-    }
-    res.json(result);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Something goes wrong",
-    });
-  }
-};
-
-export const getMinBetweenDate = async (req, res) => {
-  let fecha_inicio = req.query.fecha_inicio;
-  let fecha_fin = req.query.fecha_fin;
-  let sensor = req.query.sensor;
-  let mul = req.query.mul;
-  let fecha = mul == "mul_1" ? "fecha_m1" : "fecha_m2";
-  let hora = mul == "mul_1" ? "hora_m1" : "hora_m2";
-
-  if (!fecha_inicio || !fecha_fin) {
-    return res.status(400).json({ message: "Faltan parámetros de fecha" });
-  }
-
-  if (!isValidDate(fecha_inicio) || !isValidDate(fecha_fin)) {
-    return res.status(400).json({ message: "Fechas no válidas" });
-  }
-
-  try {
-    const [result] = await pool.query(
-      `SELECT MIN(${sensor}) as min_value, ${fecha}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? GROUP BY ${fecha}, ${hora}`,
-      [fecha_inicio, fecha_fin]
-    );
-    if (result.length === 0) {
-      return res.status(404).json({
-        message: "No se encontraron datos para las fechas especificadas",
-      });
-    }
-    res.json(result);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Something goes wrong",
-    });
-  }
-};
-
-export const getAvgBetweenDate = async (req, res) => {
-  let fecha_inicio = req.query.fecha_inicio;
-  let fecha_fin = req.query.fecha_fin;
-  let sensor = req.query.sensor;
-  let mul = req.query.mul;
-  let fecha = mul == "mul_1" ? "fecha_m1" : "fecha_m2";
-  let hora = mul == "mul_1" ? "hora_m1" : "hora_m2";
-
-  if (!fecha_inicio || !fecha_fin) {
-    return res.status(400).json({ message: "Faltan parámetros de fecha" });
-  }
-
-  if (!isValidDate(fecha_inicio) || !isValidDate(fecha_fin)) {
-    return res.status(400).json({ message: "Fechas no válidas" });
-  }
-
-  try {
-    const [result] = await pool.query(
-      `SELECT AVG(${sensor}) as avg_value, ${fecha}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? GROUP BY ${fecha}, ${hora}`,
       [fecha_inicio, fecha_fin]
     );
     if (result.length === 0) {

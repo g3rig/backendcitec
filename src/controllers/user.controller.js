@@ -1,30 +1,86 @@
-import { pool } from "../db/conn.js";
+import { pool } from "../db/database.js";
 
-export const postLogin = async(req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Faltan parámetros de correo electrónico o contraseña" });
-  };
-  try{
-    const [result] = await pool.query(
-      'SELECT * FROM `credenciales` WHERE email = ? AND password = ? ',[email , password]
-    );
-    if (result.length === 0){
-      return res.status(404).json({
-        message: "Correo electronico o contraseña no son validos"
-      });
-    } else {
-        res.status(200).json({
-        message: "Inicio de sesión exitoso",
-        success: true
-       });
-    }
-  }catch(error){
-    console.error(error);
-    console.log("soy un mesanje de error");
-    return res.status(500).json({
-      message : "Algo salio mal en el servidor",
+// OBTENER TODOS LOS USUARIOS
+export const getUsers = async (req, res) => {
+  try {
+    const [result] = await pool.query("SELECT * FROM usuarios");
+    res.send(result[0]);
+  } catch (error) {
+    console.log(error);
+    res.send(500).json({
+      message: "Algo salió mal",
     });
+  }
+};
+
+// OBTENER USUARIO POR ID
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT nombre, apellido, email, rol FROM usuarios WHERE id = ?",
+      [id]
+    );
+
+    if (result[0].length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const user = result[0];
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error al obtener el usuario: ", error);
+    return res.status(500).json({ error: "Error al obtener el usuario" });
+  }
+};
+
+// ACTUALIZAR USUARIO
+export const updateUserById = async (req, res) => {
+  const { id } = req.params;
+  const { nombre, apellido, email, rol, status } = req.body;
+
+  try {
+    // Verificar si el usuario existe antes de actualizarlo
+    const checkUser = await pool.query("SELECT * FROM usuarios WHERE id = ?", [
+      id,
+    ]);
+
+    if (checkUser[0].length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    // Actualizar los campos del usuario en la base de datos
+    const result = await pool.query(
+      "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, rol = ?, status = ? WHERE id = ?",
+      [nombre, apellido, email, rol, status, id]
+    );
+
+    return res.status(200).json({ message: "Usuario actualizado con éxito" });
+  } catch (error) {
+    console.error("Error al actualizar el usuario: ", error);
+    return res.status(500).json({ error: "Error al actualizar el usuario" });
+  }
+};
+
+// BORAR USUARIO POR ID
+export const deleteUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const checkUser = await pool.query("SELECT * FROM usuarios WHERE id = ?", [
+      id,
+    ]);
+
+    if (checkUser[0].length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const result = await pool.query("DELETE FROM usuarios WHERE id = ?", [id]);
+    return res.status(204).json({ message: "Usuario eliminado con éxito" });
+  } catch (error) {
+    console.error("Error al eliminar el usuario: ", error);
+    return res.status(500).json({ error: "Error al eliminar el usuario" });
   }
 };
