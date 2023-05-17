@@ -7,7 +7,13 @@ dotenv.config();
 // CREAR USUARIO
 export const signUp = async (req, res) => {
   try {
-    const { nombre, apellido, email, password, rol } = req.body;
+    let { nombre, apellido, email, password, rol } = req.body;
+
+    // Convertir a minúscula
+    nombre = nombre.toLowerCase();
+    apellido = apellido.toLowerCase();
+    email = email.toLowerCase();
+    rol = rol.toLowerCase();
 
     if (!nombre || !apellido || !email || !password || !rol) {
       return res
