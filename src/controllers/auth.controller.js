@@ -116,3 +116,21 @@ const generateToken = (userId, userRole) => {
 
   return token;
 };
+
+// LOGOUT
+export const logout = async (req, res) => {
+  try {
+    // Eliminar la cookie 'token'
+    res.clearCookie("token");
+
+    res.status(200).json({
+      message: "Cierre de sesión exitoso",
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Algo salió mal en el servidor",
+    });
+  }
+};
