@@ -58,7 +58,7 @@ export const getBetweenDate = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `SELECT ${sensor}, ${fecha}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? ORDER BY ${fecha} ASC, ${hora} ASC`,
+      `SELECT ${sensor}, ${hora} FROM ${mul} WHERE ${fecha} BETWEEN ? AND ? ORDER BY ${fecha} ASC, ${hora} ASC`,
       [fecha_inicio, fecha_fin]
     );
     if (result.length === 0) {
