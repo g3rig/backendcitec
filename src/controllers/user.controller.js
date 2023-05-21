@@ -66,13 +66,12 @@ export const updateUserById = async (req, res) => {
 
 // BORAR USUARIO POR ID
 export const deleteUserById = async (req, res) => {
-  const { id } = req.params;
-
+  const id = req.params.id;
+  console.log(id)
   try {
     const checkUser = await pool.query("SELECT * FROM usuarios WHERE id = ?", [
       id,
     ]);
-
     if (checkUser[0].length === 0) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
