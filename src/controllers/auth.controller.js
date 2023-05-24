@@ -8,7 +8,7 @@ dotenv.config();
 export const signUp = async (req, res) => {
   try {
     let { nombre, apellido, email, rol, password } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     // Convertir a minúscula
     nombre = nombre.toLowerCase();
     apellido = apellido.toLowerCase();
@@ -44,6 +44,7 @@ export const signUp = async (req, res) => {
   }
 };
 
+// Encriptación de la password
 const hashPassword = async (password) => {
   const saltRounds = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -54,11 +55,13 @@ const hashPassword = async (password) => {
 export const signIn = async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+
   if (!email || !password) {
     return res.status(400).json({
       message: "Faltan parámetros de correo electrónico o contraseña",
     });
   }
+
   try {
     const [result] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ?",
