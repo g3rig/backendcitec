@@ -118,7 +118,7 @@ const generateToken = (userId, userRole) => {
 };
 
 // LOGOUT
-export const logout = async (req, res) => {
+export const logOut = async (req, res) => {
   try {
     // Eliminar la cookie 'token'
     res.clearCookie("token");
