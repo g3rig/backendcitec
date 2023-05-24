@@ -7,8 +7,8 @@ dotenv.config();
 // CREAR USUARIO
 export const signUp = async (req, res) => {
   try {
-    let { nombre, apellido, email, password, rol } = req.body;
-
+    let { nombre, apellido, email, rol, password } = req.body;
+    console.log(req.body)
     // Convertir a minúscula
     nombre = nombre.toLowerCase();
     apellido = apellido.toLowerCase();
@@ -33,8 +33,8 @@ export const signUp = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     await pool.query(
-      "INSERT INTO usuarios (nombre, apellido, email, password, rol) VALUES (?,?,?,?,?)",
-      [nombre, apellido, email, hashedPassword, rol]
+      "INSERT INTO usuarios (nombre, apellido, email, rol, password) VALUES (?,?,?,?,?)",
+      [nombre, apellido, email, rol, hashedPassword]
     );
 
     return res.status(201).json({ message: "Usuario creado con éxito" });
