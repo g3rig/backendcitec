@@ -8,8 +8,8 @@ import { verificarAutenticacion } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/mul", getLastData);
+router.get("/mul", verificarAutenticacion, getLastData);
 router.get("/mul/getByDate", verificarAutenticacion, getBetweenDate);
-router.get("/mul/getLastDataSensor", getLastDataSensor);
+router.get("/mul/getLastDataSensor", verificarAutenticacion, getLastDataSensor);
 
 export default router;
