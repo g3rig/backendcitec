@@ -1,8 +1,6 @@
 import { pool } from "../db/database.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { generarJWT } from "../helpers/genJWT.js";
 
 // CREAR USUARIO
 export const signUp = async (req, res) => {
@@ -63,26 +61,26 @@ export const signIn = async (req, res) => {
   }
 
   try {
-    const [result] = await pool.query(
+    const [usuario] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ?",
       [email]
     );
 
-    if (result.length === 0) {
+    if (usuario.length === 0) {
       return res.status(404).json({
         message: "Correo electrónico o contraseña no son válidos",
       });
     }
 
-    const storedPassword = result[0].password;
+    const storedPassword = usuario[0].password;
     const passwordMatch = await bcrypt.compare(password, storedPassword);
 
     if (passwordMatch) {
-      const token = generateToken(result[0].id, result[0].rol);
+      const token = await generarJWT(usuario[0].id, usuario[0].rol);
       // Configurar la cookie con el token JWT
       res.cookie("token", token, {
         httpOnly: true, // La cookie solo es accesible a través de HTTP
-        maxAge: 3600000, // Tiempo de expiración de la cookie (1 hora en milisegundos)
+        maxAge: 14400000, // Tiempo de expiración de la cookie (4 horas en milisegundos)
       });
 
       res.status(200).json({
@@ -101,23 +99,6 @@ export const signIn = async (req, res) => {
       message: "Algo salió mal en el servidor",
     });
   }
-};
-
-// Generar token JWT
-const generateToken = (userId, userRole) => {
-  const payload = {
-    userId: userId,
-    role: userRole,
-  };
-
-  const options = {
-    expiresIn: 3600, // Tiempo de expiración del token (1 hora en este caso)
-  };
-
-  // Generar token utilizando la clave secreta
-  const token = jwt.sign(payload, process.env.JWT_SECRET, options);
-
-  return token;
 };
 
 // LOGOUT

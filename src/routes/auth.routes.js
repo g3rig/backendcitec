@@ -4,7 +4,7 @@ import { verificarAutenticacion } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.post("/auth/signup", verificarAutenticacion, signUp);
+router.post("/auth/signup", signUp);
 router.post("/auth/signin", signIn);
 router.post("/auth/logout", logOut);
 
