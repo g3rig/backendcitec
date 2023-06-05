@@ -16,6 +16,26 @@ export const getLastData = async (req, res) => {
   }
 };
 
+export const getLastDataHome = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      'SELECT (SELECT p1tmt1 FROM mul_1 ORDER BY fecha_m1 DESC, hora_m1 DESC LIMIT 1) as p1tmt1,' +
+      '(SELECT p1tl1 FROM mul_1 ORDER BY fecha_m1 DESC, hora_m1 DESC LIMIT 1) as p1tl1,' +
+      '(SELECT p2co2_2 FROM mul_1 ORDER BY fecha_m1 DESC, hora_m1 DESC LIMIT 1) as p2co2_2,' +
+      '(SELECT p1co2_1 FROM mul_1 ORDER BY fecha_m1 DESC, hora_m1 DESC LIMIT 1) as p1co2_1,' +
+      '(SELECT p2co2_1 FROM mul_1 ORDER BY fecha_m1 DESC, hora_m1 DESC LIMIT 1) as p2co2_1,' +
+      '(SELECT co2au FROM mul_2 ORDER BY fecha_m2 DESC, hora_m2 DESC LIMIT 1) as co2au,' +
+      '(SELECT p2tmt1 FROM mul_2 ORDER BY fecha_m2 DESC, hora_m2 DESC LIMIT 1) as p2tmt1'
+    )
+    res.send(result[0]);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+    return res.status(500).json({
+      message: "Algo salió mal",
+    });
+  }
+}
+
 export const getLastDataSensor = async (req, res) => {
   let sensor = req.query.sensor;
   let mul = req.query.mul;
@@ -35,7 +55,7 @@ export const getLastDataSensor = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Something goes wrong",
+      message: "Algo salió mal",
     });
   }
 };
@@ -70,7 +90,7 @@ export const getBetweenDate = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Something goes wrong",
+      message: "Algo salió mal",
     });
   }
 };
