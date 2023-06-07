@@ -105,7 +105,8 @@ export const signIn = async (req, res) => {
 export const logOut = async (req, res) => {
   try {
     // Eliminar la cookie 'token'
-    res.clearCookie("token");
+    res.clearCookie('token', { path: '/', expires: new Date(0) });
+
 
     res.status(200).json({
       message: "Cierre de sesión exitoso",
