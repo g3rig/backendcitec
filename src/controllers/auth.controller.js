@@ -76,7 +76,7 @@ export const signIn = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, storedPassword);
 
     if (passwordMatch) {
-      const token = await generarJWT(usuario[0].id, usuario[0].rol);
+      const token = await generarJWT(usuario[0].id, usuario[0].rol, usuarios[0].nombre, usuarios[0].apellido, usuarios[0].email);
       // Configurar la cookie con el token JWT
       res.cookie("token", token, {
         httpOnly: true, // La cookie solo es accesible a través de HTTP

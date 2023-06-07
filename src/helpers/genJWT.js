@@ -1,11 +1,14 @@
 import jwt from "jsonwebtoken";
 
 // Generar token JWT
-export const generarJWT = (uid, userRole) => {
+export const generarJWT = (uid, userRole, userName, userLastName, userEmail) => {
   return new Promise((resolve, reject) => {
     const payload = {
       uid: uid,
       role: userRole,
+      name: userName,
+      lastName: userLastName,
+      email: userEmail
     };
 
     jwt.sign(
