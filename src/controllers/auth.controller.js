@@ -119,3 +119,42 @@ export const logOut = async (req, res) => {
     });
   }
 };
+
+export const changePassword = async (req, res) => {
+  let currentPassword = req.body.currentPassword;
+  let newPassword = req.body.newPassword;
+  let userEmail = req.body.userEmail
+  
+  if(!currentPassword || !newPassword || !userEmail){
+    return res.status(400).json({ error: 'Se requieren la contraseña actual y la nueva contraseña' });
+  }
+
+  try {
+      const [usuario] = await pool.query(
+        "SELECT * FROM usuarios WHERE email = ?",[userEmail]
+      )
+
+      if (usuario.length === 0) {
+        return res.status(404).json({
+          message: "Correo electrónico o contraseña no son válidos",
+        });
+      }
+
+      const storedPassword = usuario[0].password;
+      const passwordMatch = await bcrypt.compare(currentPassword, storedPassword)
+
+      if (passwordMatch){
+
+        const hashedNewPassword = await hashPassword(newPassword);
+
+        await pool.query(
+          "UPDATE usuarios SET password = ? WHERE email= ?",[hashedNewPassword, userEmail]
+        )
+        return res.status(200).json({ message: 'Contraseña cambiada exitosamente' });
+      } else {
+        return res.status(401).json({ error: 'La contraseña actual es incorrecta' });
+      }
+  } catch (error) {
+    return res.status(500).json({ error: 'Ha ocurrido un error al cambiar la contraseña' });
+  }
+};
