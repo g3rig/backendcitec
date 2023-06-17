@@ -28,3 +28,30 @@ export const generarJWT = (uid, userRole, userName, userLastName, userEmail) => 
     );
   });
 };
+
+// Token para restablecer contraseña
+export const JWTforgotPassword = (uid, userEmail) => {
+  return new Promise((resolve, reject) => {
+    const payload = {
+      uid: uid,
+      email: userEmail
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "10m",
+      },
+      (err, token) => {
+        if (err) {
+          console.error(err);
+          reject("No se pudo generar el token");
+        } else {
+          resolve(token);
+        }
+      }
+    );
+  });
+};
+

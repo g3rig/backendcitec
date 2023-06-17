@@ -28,3 +28,22 @@ export const verificarAutenticacion = (req, res, next) => {
     return res.status(401).json({ message: "Token inválido" });
   }
 };
+
+export function verifyToken(req, res, next) {
+  const token = req.headers['x-crdtl'];
+  const decodedToken = atob(token);
+  if (!token) {
+    return res.status(403).json({ error: 'No se proporcionó ningún token.' });
+  }
+  try {
+    // Verifica el token
+    const decoded = jwt.verify(decodedToken, process.env.JWT_SECRET);
+    // Almacena el valor decodificado en req.user para su uso posterior en otras rutas.
+    req.user = decoded;
+    // Llama a next() para pasar al siguiente middleware o ruta
+    next();
+  } catch (error) {
+    // Si algo va mal, por ejemplo, si el token no es válido o ha expirado, jwt.verify() lanzará un error.
+    return res.status(400).json({ error: 'Ocurrió un error al verificar el token.' });
+  }
+}
