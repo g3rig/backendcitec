@@ -43,9 +43,16 @@ export const getLastDataSensor = async (req, res) => {
   let hora = req.query.hora;
 
   try {
-    const [result] = await pool.query(
-      `SELECT ${sensor}, ${fecha}, ${hora} FROM ${mul} ORDER BY ${hora} DESC limit 10`
-    );
+    const [result] = await pool.query(`
+      SELECT ${sensor}, ${fecha}, ${hora}
+      FROM ${mul}
+      WHERE ${fecha} IN (
+        SELECT MAX(${fecha})
+        FROM ${mul}
+      )
+      ORDER BY ${hora} DESC
+      LIMIT 10
+    `);
     if (result.length === 0) {
       return res.status(404).json({
         message: "No se encontraron datos para las fechas especificadas",
