@@ -36,7 +36,6 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// ACTUALIZAR USUARIO
 export const updateUserById = async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, email, rol, status } = req.body;
@@ -51,12 +50,13 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    const checkEmail = await pool.query("SELECT * FROM usuarios WHERE email = ?", [
-      email,
+    // Verificar si existe otro usuario con el mismo correo electrónico
+    const checkEmail = await pool.query("SELECT * FROM usuarios WHERE email = ? AND id != ?", [
+      email, id
     ]);
 
-    if (checkEmail[0]. length === 2){
-      return res.status(404).json({ error: "El email ya está registrado en otro usuario"});
+    if (checkEmail[0].length > 0) {
+      return res.status(404).json({ error: "El email ya está registrado en otro usuario" });
     }
 
     // Actualizar los campos del usuario en la base de datos
@@ -71,6 +71,7 @@ export const updateUserById = async (req, res) => {
     return res.status(500).json({ error: "Error al actualizar el usuario" });
   }
 };
+
 
 // BORAR USUARIO POR ID
 export const deleteUserById = async (req, res) => {
