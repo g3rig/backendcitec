@@ -51,6 +51,14 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
+    const checkEmail = await pool.query("SELECT * FROM usuarios WHERE email = ?", [
+      email,
+    ]);
+
+    if (checkEmail[0]. length === 2){
+      return res.status(404).json({ error: "El email ya está registrado en otro usuario"});
+    }
+
     // Actualizar los campos del usuario en la base de datos
     await pool.query(
       "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, rol = ?, status = ? WHERE id = ?",

@@ -125,7 +125,7 @@ export const changePassword = async (req, res) => {
   let currentPassword = req.body.currentPassword;
   let newPassword = req.body.newPassword;
   let userEmail = req.body.userEmail;
-  
+
   if(!currentPassword || !newPassword || !userEmail){
     return res.status(400).json({ error: 'Se requieren la contraseña actual y la nueva contraseña' });
   }
@@ -162,16 +162,16 @@ export const changePassword = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   let userEmail = req.body.email;
-  
+
   if(!userEmail){
    return res.status(400).json({ error: 'Se requiere el correo electronico' });
   }
- 
+
   try{
     const [usuario] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ?",[userEmail]
     )
-    
+
     if (usuario.length === 0) {
       return res.status(404).json({
         message: "Error de correo. Ingrese nuevamente  un correo electronico",
