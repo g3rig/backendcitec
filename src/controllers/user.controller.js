@@ -47,7 +47,7 @@ export const updateUserById = async (req, res) => {
     ]);
 
     if (checkUser[0].length === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Usuario no encontrado", field: "usuario" });
     }
 
     // Verificar si existe otro usuario con el mismo correo electrónico
@@ -56,7 +56,7 @@ export const updateUserById = async (req, res) => {
     ]);
 
     if (checkEmail[0].length > 0) {
-      return res.status(404).json({ error: "El email ya está registrado en otro usuario" });
+      return res.status(404).json({ error: "El email ya está registrado en otro usuario", field: "email" });
     }
 
     // Actualizar los campos del usuario en la base de datos
