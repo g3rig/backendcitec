@@ -184,7 +184,7 @@ export const forgotPassword = async (req, res) => {
     //TODO SENDEMAIL
     try {
       await transporter.sendMail({
-        from: 'Monitorio CITEC <mtardones99@gmail.com>', // sender address
+        from: 'Monitoreo CITEC <mtardones99@gmail.com>', // sender address
         to: userEmail, // list of receivers
         subject: "Enlace para restablecer su contraseña de MonitoreoCITEC", // Subject line // plain text body
         html: `<p>Haga clic en el siguiente enlace para restablecer su contraseña:</p><a href="${verificationLink}">${verificationLink}</a>`
