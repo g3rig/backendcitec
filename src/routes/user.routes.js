@@ -6,15 +6,27 @@ import {
   getUsers,
   updateUserById,
 } from "../controllers/user.controller.js";
-import { verificarAutenticacion } from "../middlewares/auth.js";
+import { verificarAutenticacion, verificarExpiracion } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/user/getUsers", verificarAutenticacion, getUsers);
-router.get("/user/getUserById/:id", verificarAutenticacion, getUserById);
-router.put("/user/updateUserById/:id", verificarAutenticacion, updateUserById);
+router.get(
+  "/user/getUsers",
+  verificarExpiracion,
+  verificarAutenticacion,
+  getUsers);
+router.get(
+  "/user/getUserById/:id",
+  verificarExpiracion,
+  verificarAutenticacion,
+  getUserById);
+router.put("/user/updateUserById/:id",
+verificarExpiracion,
+verificarAutenticacion,
+updateUserById);
 router.delete(
   "/user/deleteUserById/:id",
+  verificarExpiracion,
   verificarAutenticacion,
   deleteUserById
 );

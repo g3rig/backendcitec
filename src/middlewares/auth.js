@@ -29,7 +29,7 @@ export const verificarAutenticacion = (req, res, next) => {
   }
 };
 
-export function verifyToken(req, res, next) {
+export const verifyToken = (req, res, next) => {
   const token = req.headers['x-crdtl'];
   const decodedToken = atob(token);
   if (!token) {
@@ -45,5 +45,23 @@ export function verifyToken(req, res, next) {
   } catch (error) {
     // Si algo va mal, por ejemplo, si el token no es válido o ha expirado, jwt.verify() lanzará un error.
     return res.status(400).json({ error: 'Ocurrió un error al verificar el token.' });
+  }
+}
+
+export const verificarExpiracion = (req, res, next) => {
+  const token = req.headers["x-crdtl"] || req.cookies.token;
+
+  if (!token) {
+    return res.status(403).json({ auth: false, message: 'No se ha provisto un token.' });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (decodedToken.exp < Date.now() / 1000) {
+      return res.status(401).json({ auth: false, message: 'Token expirado.' });
+    }
+    next();
+  } catch (error) {
+    return res.status(401).json({ auth: false, message: 'Token inválido.' });
   }
 }
