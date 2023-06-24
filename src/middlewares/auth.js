@@ -29,7 +29,7 @@ export const verificarAutenticacion = (req, res, next) => {
   }
 };
 
-export const verifyToken = (req, res, next) => {
+export const verificarTokenPass = (req, res, next) => {
   const token = req.headers['x-crdtl'];
   const decodedToken = atob(token);
   if (!token) {
