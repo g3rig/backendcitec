@@ -80,7 +80,7 @@ export const signIn = async (req, res) => {
       const token = await generarJWT(usuario[0].id, usuario[0].rol, usuario[0].nombre, usuario[0].apellido, usuario[0].email);
       // Configurar la cookie con el token JWT
       res.cookie("token", token, {
-        httpOnly: true, // La cookie solo es accesible a través de HTTP
+        httpOnly: false,
         maxAge: 14400000, // Tiempo de expiración de la cookie (4 horas en milisegundos)
       });
 
@@ -92,15 +92,18 @@ export const signIn = async (req, res) => {
     } else {
       res.status(401).json({
         message: "Correo electrónico o contraseña no son válidos",
+        error: error,
       });
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       message: "Algo salió mal en el servidor",
+      error: error,
     });
   }
 };
+
 
 // LOGOUT
 export const logOut = async (req, res) => {

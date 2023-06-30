@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
 
 // Generar token JWT
 export const generarJWT = (uid, userRole, userName, userLastName, userEmail) => {
