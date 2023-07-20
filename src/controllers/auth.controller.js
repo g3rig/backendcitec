@@ -9,8 +9,8 @@ export const signUp = async (req, res) => {
     let { nombre, apellido, email, rol, password } = req.body;
     console.log(req.body);
     // Convertir a minúscula
-    nombre = nombre.toLowerCase();
-    apellido = apellido.toLowerCase();
+    nombre = nombre;
+    apellido = apellido;
     email = email.toLowerCase();
     rol = rol.toLowerCase();
 
@@ -182,7 +182,7 @@ export const forgotPassword = async (req, res) => {
     }
     const token = await JWTforgotPassword(usuario[0].id, usuario[0].email);
     const tokenEncoded = btoa(token);
-    const verificationLink = `http://localhost:3000/ResetPassword/${tokenEncoded}`;
+    const verificationLink = `http://146.83.194.142:1183/ResetPassword/${tokenEncoded}`;
 
     //TODO SENDEMAIL
     try {
