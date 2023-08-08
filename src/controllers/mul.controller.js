@@ -44,7 +44,7 @@ export const getLastDataSensor = async (req, res) => {
 
   try {
     const [result] = await pool.query(`
-      SELECT ${sensor}, ${fecha}, ${hora}
+      SELECT ${sensor}, DATE_FORMAT(${fecha}, '%d-%m-%Y') AS ${fecha}, DATE_FORMAT(${hora}, '%H:i') AS ${hora}
       FROM ${mul}
       WHERE (${fecha}, ${hora}) >= (
         SELECT ${fecha}, ${hora}
@@ -52,7 +52,7 @@ export const getLastDataSensor = async (req, res) => {
         ORDER BY ${fecha} DESC, ${hora} DESC
         LIMIT 1 OFFSET 9
       )
-      ORDER BY ${fecha} DESC, ${hora} DESC
+      ORDER BY ${fecha} ASC, ${hora} ASC
     `);
     if (result.length === 0) {
       return res.status(404).json({
